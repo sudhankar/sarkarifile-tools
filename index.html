@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SarkariFile Tools - PDF Merge Test</title>
+  <meta name="robots" content="noindex,nofollow">
+</head>
+<body>
+  <main style="max-width:900px;margin:30px auto;padding:16px;font-family:system-ui,sans-serif;">
+    <h1>PDF Merge Test</h1>
+    <p>This is only a technical test page for the Cloudflare deployment. The production tool will be placed inside a Blogger post.</p>
+
+    <div class="sf-tool sf-pdf-merge" data-sf-tool="pdf-merge">
+      <div class="sf-pdf-merge__header">
+        <h2>Merge PDF</h2>
+        <p>Select two or more PDF files, arrange them, and merge them in your browser.</p>
+      </div>
+
+      <div class="sf-pdf-merge__dropzone" tabindex="0" role="button" aria-label="Select PDF files">
+        <input type="file" class="sf-pdf-merge__input" accept="application/pdf,.pdf" multiple>
+        <div class="sf-pdf-merge__drop-content">
+          <strong>Select PDF Files</strong>
+          <span>or drag and drop PDF files here</span>
+        </div>
+      </div>
+
+      <div class="sf-pdf-merge__files" aria-live="polite"></div>
+
+      <div class="sf-pdf-merge__actions">
+        <button type="button" class="sf-pdf-merge__merge" disabled>Merge PDF</button>
+        <button type="button" class="sf-pdf-merge__clear" disabled>Clear</button>
+      </div>
+
+      <div class="sf-pdf-merge__status" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <script src="./core/loader.js" defer></script>
+</body>
+</html>
