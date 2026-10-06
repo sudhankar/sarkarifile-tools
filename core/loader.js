@@ -1,76 +1,157 @@
-(() => {
+(function () {
   "use strict";
 
-  const BASE = new URL("./", document.currentScript?.src || location.href);
+  var BASE_URL = "https://sarkarifile-tools.pages.dev/";
 
-  const loadedStyles = new Set();
-  const loadedScripts = new Set();
+  function loadCSS(url) {
+    return new Promise(function (resolve, reject) {
+      var existing = document.querySelector(
+        'link[data-sarkarifile-css="' + url + '"]'
+      );
 
-  function loadCss(path) {
-    const url = new URL(path, BASE).href;
-    if (loadedStyles.has(url)) return Promise.resolve();
-    loadedStyles.add(url);
+      if (existing) {
+        resolve();
+        return;
+      }
 
-    return new Promise((resolve, reject) => {
-      const link = document.createElement("link");
+      var link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = url;
-      link.onload = resolve;
-      link.onerror = () => reject(new Error(`Could not load CSS: ${url}`));
+      link.setAttribute("data-sarkarifile-css", url);
+
+      link.onload = function () {
+        resolve();
+      };
+
+      link.onerror = function () {
+        reject(new Error("Could not load CSS: " + url));
+      };
+
       document.head.appendChild(link);
     });
   }
 
-  function loadJs(path) {
-    const url = new URL(path, BASE).href;
-    if (loadedScripts.has(url)) return Promise.resolve();
-    loadedScripts.add(url);
+  function loadJS(url) {
+    return new Promise(function (resolve, reject) {
+      var existing = document.querySelector(
+        'script[data-sarkarifile-js="' + url + '"]'
+      );
 
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
+      if (existing) {
+        if (existing.getAttribute("data-loaded") === "true") {
+          resolve();
+        } else {
+          existing.addEventListener("load", resolve);
+          existing.addEventListener("error", function () {
+            reject(new Error("Could not load JS: " + url));
+          });
+        }
+        return;
+      }
+
+      var script = document.createElement("script");
       script.src = url;
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error(`Could not load JS: ${url}`));
+      script.setAttribute("data-sarkarifile-js", url);
+
+      script.onload = function () {
+        script.setAttribute("data-loaded", "true");
+        resolve();
+      };
+
+      script.onerror = function () {
+        reject(new Error("Could not load JS: " + url));
+      };
+
       document.head.appendChild(script);
     });
   }
 
-  async function loadPdfMerge() {
-    await loadCss("core/core.css");
-    await loadCss("tools/pdf-merge/pdf-merge.css");
-    await loadJs("tools/pdf-merge/pdf-merge.js");
+  function initTool(root) {
+    var toolName = root.getAttribute("data-sf-tool");
 
-    if (!window.SarkariFileTools?.initPdfMerge) {
-      throw new Error("PDF Merge module did not initialize.");
+    if (!toolName) {
+      return Promise.resolve();
     }
 
-    document
-      .querySelectorAll('.sf-tool[data-sf-tool="pdf-merge"]')
-      .forEach(window.SarkariFileTools.initPdfMerge);
+    if (root.getAttribute("data-sf-initialized") === "true") {
+      return Promise.resolve();
+    }
+
+    if (toolName === "pdf-merge") {
+      var coreCSS =
+        BASE_URL + "core/core.css";
+
+      var toolCSS =
+        BASE_URL + "tools/pdf-merge/pdf-merge.css";
+
+      var toolJS =
+        BASE_URL + "tools/pdf-merge/pdf-merge.js";
+
+      return Promise.all([
+        loadCSS(coreCSS),
+        loadCSS(toolCSS),
+        loadJS(toolJS)
+      ]).then(function () {
+        if (
+          window.SarkariFileTools &&
+          typeof window.SarkariFileTools.initPdfMerge === "function"
+        ) {
+          window.SarkariFileTools.initPdfMerge(root);
+
+          root.setAttribute("data-sf-initialized", "true");
+        } else {
+          throw new Error(
+            "PDF Merge initializer was not found."
+          );
+        }
+      });
+    }
+
+    return Promise.reject(
+      new Error("Unknown SarkariFile tool: " + toolName)
+    );
   }
 
-  async function boot() {
-    const toolNames = new Set(
-      Array.from(document.querySelectorAll("[data-sf-tool]"))
-        .map(el => el.getAttribute("data-sf-tool"))
-        .filter(Boolean)
-    );
+  function initAllTools() {
+    var tools = document.querySelectorAll("[data-sf-tool]");
 
-    for (const name of toolNames) {
-      try {
-        if (name === "pdf-merge") {
-          await loadPdfMerge();
-        }
-      } catch (error) {
-        console.error("SarkariFile tool loader error:", error);
-      }
+    if (!tools.length) {
+      return;
+    }
+
+    Array.prototype.forEach.call(tools, function (root) {
+      initTool(root).catch(function (error) {
+        console.error(
+          "SarkariFile tool loader error:",
+          error
+        );
+      });
+    });
+  }
+
+  function start() {
+    initAllTools();
+
+    /*
+     * Blogger sometimes modifies/inserts post content
+     * after the initial page load. This observer catches
+     * tools added later without affecting other page elements.
+     */
+    if (window.MutationObserver) {
+      var observer = new MutationObserver(function () {
+        initAllTools();
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
     }
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+    document.addEventListener("DOMContentLoaded", start);
   } else {
-    boot();
+    start();
   }
 })();
