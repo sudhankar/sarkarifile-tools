@@ -40,12 +40,17 @@
       if (existing) {
         if (existing.getAttribute("data-loaded") === "true") {
           resolve();
-        } else {
-          existing.addEventListener("load", resolve);
-          existing.addEventListener("error", function () {
-            reject(new Error("Could not load JS: " + url));
-          });
+          return;
         }
+
+        existing.addEventListener("load", function () {
+          resolve();
+        });
+
+        existing.addEventListener("error", function () {
+          reject(new Error("Could not load JS: " + url));
+        });
+
         return;
       }
 
@@ -67,15 +72,34 @@
   }
 
   function initTool(root) {
+    if (!root) {
+      return Promise.resolve();
+    }
+
     var toolName = root.getAttribute("data-sf-tool");
 
     if (!toolName) {
       return Promise.resolve();
     }
 
-    if (root.getAttribute("data-sf-initialized") === "true") {
+    /*
+     * IMPORTANT:
+     * Prevent the same Blogger tool from being initialized
+     * more than once while CSS/JS is loading.
+     */
+    if (
+      root.getAttribute("data-sf-initialized") === "true" ||
+      root.getAttribute("data-sf-loading") === "true"
+    ) {
       return Promise.resolve();
     }
+
+    /*
+     * Lock immediately BEFORE starting async loading.
+     * This prevents MutationObserver from starting another
+     * initialization at the same time.
+     */
+    root.setAttribute("data-sf-loading", "true");
 
     if (toolName === "pdf-merge") {
       var coreCSS =
@@ -91,56 +115,105 @@
         loadCSS(coreCSS),
         loadCSS(toolCSS),
         loadJS(toolJS)
-      ]).then(function () {
-        if (
-          window.SarkariFileTools &&
-          typeof window.SarkariFileTools.initPdfMerge === "function"
-        ) {
-          window.SarkariFileTools.initPdfMerge(root);
+      ])
+        .then(function () {
+          if (
+            window.SarkariFileTools &&
+            typeof window.SarkariFileTools.initPdfMerge === "function"
+          ) {
+            window.SarkariFileTools.initPdfMerge(root);
 
-          root.setAttribute("data-sf-initialized", "true");
-        } else {
-          throw new Error(
-            "PDF Merge initializer was not found."
+            root.setAttribute(
+              "data-sf-initialized",
+              "true"
+            );
+
+            root.removeAttribute(
+              "data-sf-loading"
+            );
+          } else {
+            throw new Error(
+              "PDF Merge initializer was not found."
+            );
+          }
+        })
+        .catch(function (error) {
+          root.removeAttribute(
+            "data-sf-loading"
           );
-        }
-      });
+
+          throw error;
+        });
     }
 
+    root.removeAttribute("data-sf-loading");
+
     return Promise.reject(
-      new Error("Unknown SarkariFile tool: " + toolName)
+      new Error(
+        "Unknown SarkariFile tool: " + toolName
+      )
     );
   }
 
   function initAllTools() {
-    var tools = document.querySelectorAll("[data-sf-tool]");
+    var tools = document.querySelectorAll(
+      "[data-sf-tool]"
+    );
 
     if (!tools.length) {
       return;
     }
 
-    Array.prototype.forEach.call(tools, function (root) {
-      initTool(root).catch(function (error) {
-        console.error(
-          "SarkariFile tool loader error:",
-          error
-        );
-      });
-    });
+    Array.prototype.forEach.call(
+      tools,
+      function (root) {
+        initTool(root).catch(function (error) {
+          console.error(
+            "SarkariFile tool loader error:",
+            error
+          );
+        });
+      }
+    );
   }
 
   function start() {
+    /*
+     * Initialize tools already present in the page.
+     */
     initAllTools();
 
     /*
-     * Blogger sometimes modifies/inserts post content
-     * after the initial page load. This observer catches
-     * tools added later without affecting other page elements.
+     * Blogger may insert post content after page load.
+     * MutationObserver watches only for newly added elements.
+     *
+     * Duplicate initialization is prevented by
+     * data-sf-loading / data-sf-initialized.
      */
     if (window.MutationObserver) {
-      var observer = new MutationObserver(function () {
-        initAllTools();
-      });
+      var observer =
+        new MutationObserver(function (mutations) {
+          var shouldCheck = false;
+
+          for (
+            var i = 0;
+            i < mutations.length;
+            i++
+          ) {
+            if (
+              mutations[i].type === "childList" &&
+              mutations[i].addedNodes &&
+              mutations[i].addedNodes.length
+            ) {
+              shouldCheck = true;
+              break;
+            }
+          }
+
+          if (shouldCheck) {
+            initAllTools();
+          }
+        });
 
       observer.observe(document.body, {
         childList: true,
@@ -149,8 +222,13 @@
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
+  if (
+    document.readyState === "loading"
+  ) {
+    document.addEventListener(
+      "DOMContentLoaded",
+      start
+    );
   } else {
     start();
   }
