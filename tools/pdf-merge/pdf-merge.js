@@ -2,7 +2,7 @@
   "use strict";
 
   const PDF_LIB_URL =
-    "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js";
+    "https://sarkarifile-tools.pages.dev/libs/pdf-lib/pdf-lib.min.js";
 
   function loadScriptOnce(src) {
     return new Promise((resolve, reject) => {
