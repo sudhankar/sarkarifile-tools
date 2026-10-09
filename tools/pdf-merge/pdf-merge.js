@@ -86,6 +86,17 @@
         const row = document.createElement("div");
         row.className = "sf-pdf-merge__file";
 
+        const thumb = document.createElement("div");
+        thumb.className = "sf-pdf-merge__thumb";
+        thumb.textContent = "Preview…";
+        row.appendChild(thumb);
+        if (window.SarkariFileTools && window.SarkariFileTools.previewPdf) {
+          window.SarkariFileTools.previewPdf.render(file, thumb, { width: 72 }).then(() => {
+            const tile = thumb.querySelector(".sf-preview-tile");
+            if (tile) { const label = tile.querySelector(".sf-preview-label"); if (label) label.remove(); tile.className = "sf-pdf-merge__thumb-inner"; }
+          }).catch(() => { thumb.textContent = "Preview unavailable"; });
+        }
+
         const number = document.createElement("div");
         number.className = "sf-pdf-merge__number";
         number.textContent = String(index + 1);
