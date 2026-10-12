@@ -19,3 +19,20 @@
 .sf-pdf-delete .sf-preview-label input{width:18px;height:18px;accent-color:#b42318}
 .sf-pdf-delete .sfd-note{font-size:.9rem;color:#596579;line-height:1.5}
 @media(max-width:480px){.sf-pdf-delete .sfd-card{padding:12px}.sf-pdf-delete .sf-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.sf-pdf-delete .sfd-btn{flex:1 1 auto}}
+
+.sf-pdf-delete .sf-file-drop{position:relative;display:flex;align-items:center;justify-content:center;min-height:88px;padding:16px;border:2px dashed #8a9bb5;border-radius:10px;background:#f8fafc;color:#24334b;text-align:center;cursor:pointer;overflow:hidden}
+.sf-pdf-delete .sf-file-drop.is-dragover{border-color:#155eef;background:#eff5ff}
+.sf-pdf-delete .sf-file-drop input[type="file"]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;cursor:pointer!important;z-index:2}
+.sf-pdf-delete .sf-file-drop .sf-file-drop__content{display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.sf-pdf-delete .sf-file-drop .sf-file-drop__content strong{font-weight:700}
+.sf-pdf-delete .sf-file-drop .sf-file-drop__content span{font-size:.9em;color:#596579}
+.sf-tool .sf-preview-tile{cursor:pointer;touch-action:manipulation;user-select:none}
+.sf-tool .sf-preview-tile:focus-visible{outline:3px solid #155eef;outline-offset:2px}
+
+.sf-pdf-delete .sf-file-drop{position:relative;display:flex;align-items:center;justify-content:center;min-height:88px;padding:16px;border:2px dashed #8a9bb5;border-radius:10px;background:#f8fafc;color:#24334b;text-align:center;cursor:pointer;overflow:hidden}
+.sf-pdf-delete .sf-file-drop.is-dragover{border-color:#155eef;background:#eff5ff}
+.sf-pdf-delete .sf-file-drop input[type="file"]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;cursor:pointer!important;z-index:2}
+.sf-pdf-delete .sf-file-drop__content{display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.sf-pdf-delete .sf-file-drop__content span{font-size:.9em;color:#596579}
+.sf-pdf-delete .sf-preview-tile{cursor:pointer;touch-action:manipulation;user-select:none}
+.sf-pdf-delete .sf-preview-tile:focus-visible{outline:3px solid #155eef;outline-offset:2px}
