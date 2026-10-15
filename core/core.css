@@ -1,0 +1,39 @@
+/* SarkariFile tool system: intentionally scoped to .sf-tool */
+.sf-tool,
+.sf-tool * {
+  box-sizing: border-box;
+}
+
+.sf-tool {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 20px 0;
+  font-family: inherit;
+  color: #202124;
+  line-height: 1.45;
+}
+
+.sf-tool button,
+.sf-tool input,
+.sf-tool select,
+.sf-tool textarea {
+  font: inherit;
+}
+
+.sf-tool button {
+  cursor: pointer;
+}
+
+.sf-tool button:disabled {
+  cursor: not-allowed;
+}
+
+.sf-tool img,
+.sf-tool svg {
+  max-width: 100%;
+}
+
+.sf-tool [hidden] {
+  display: none !important;
+}
