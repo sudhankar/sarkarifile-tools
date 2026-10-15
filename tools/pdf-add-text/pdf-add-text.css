@@ -5,3 +5,5 @@
 .sf-pdf-add-text .sf-preview-grid{grid-template-columns:1fr!important;max-width:108px!important}.sf-pdf-add-text .sf-pdf-editor-layout{grid-template-columns:minmax(72px,108px) minmax(0,1fr)!important}.sf-pdf-add-text .sfat-live-text.is-selected{outline:2px solid #2749F5;box-shadow:0 0 0 3px #fff}
 
 .sf-pdf-add-text .sfmini-btn.is-armed{background:linear-gradient(135deg,#15803d,#166534);box-shadow:0 0 0 3px #86efac55}.sf-pdf-add-text .sf-pdf-large-stage.is-placement-mode{cursor:crosshair}
+
+.sf-pdf-add-text .sfat-live-text{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;max-width:calc(100% - 2px)}.sf-pdf-add-text .sf-pdf-large-stage.is-placement-mode{cursor:crosshair}.sf-pdf-add-text [data-sfat-add].is-armed{background:linear-gradient(135deg,#16a34a,#15803d);box-shadow:0 0 0 3px #bbf7d0}
