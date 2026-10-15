@@ -24,5 +24,3 @@
 .sf-pdf-annotation .ann-layer{position:absolute;inset:0;overflow:visible;touch-action:none}.sf-pdf-annotation .ann-item{cursor:move;pointer-events:all}.sf-pdf-annotation .ann-item.is-selected{filter:drop-shadow(0 0 2px #2749F5)}.sf-pdf-annotation .sf-new-stage{touch-action:none}
 
 .sf-pdf-protect .sf-security-note{padding:10px 12px;border:1px solid #bfdbfe;border-radius:10px;background:#eff6ff;color:#1e3a8a;font-size:.95rem}.sf-pdf-protect [data-protect-drop]{cursor:pointer}.sf-pdf-protect .is-dragover{background:#dbeafe!important;border-color:#2749F5!important}
-
-.sf-tool .sf-file-drop{cursor:pointer;transition:border-color .15s,background .15s}.sf-tool .sf-file-drop.is-dragover{border-color:#2749F5;background:#e8efff}.sf-tool .sf-file-drop input[type="file"]{display:block!important;visibility:visible!important;opacity:1!important;position:static!important;width:100%;max-width:100%;margin-top:8px;cursor:pointer}
