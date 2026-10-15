@@ -22,3 +22,5 @@
 @media(max-width:620px){.sf-tool .sf-new-card .sf-new-layout{grid-template-columns:minmax(0,1fr)}.sf-tool .sf-new-card .sf-new-thumbs{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));max-height:150px}.sf-tool .sf-new-card .sf-new-stage-wrap{max-height:62vh;padding:6px}}
 
 .sf-pdf-annotation .ann-layer{position:absolute;inset:0;overflow:visible;touch-action:none}.sf-pdf-annotation .ann-item{cursor:move;pointer-events:all}.sf-pdf-annotation .ann-item.is-selected{filter:drop-shadow(0 0 2px #2749F5)}.sf-pdf-annotation .sf-new-stage{touch-action:none}
+
+.sf-tool .sf-file-drop{cursor:pointer;transition:border-color .15s,background .15s}.sf-tool .sf-file-drop.is-dragover{border-color:#2749F5;background:#e8efff}.sf-tool .sf-file-drop input[type="file"]{display:block!important;visibility:visible!important;opacity:1!important;position:static!important;width:100%;max-width:100%;margin-top:8px;cursor:pointer}
