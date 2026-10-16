@@ -1,0 +1,1 @@
+(function(){var f=function(r){if(window.SarkariFileTools&&window.SarkariFileTools.initImageCompress)window.SarkariFileTools.initImageCompress(r)};window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageCompress=window.SarkariFileTools.initImageCompress||f;})();
