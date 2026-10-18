@@ -49,3 +49,44 @@
 .sf-tool .sf-new-card input[type=checkbox]{width:18px;height:18px;min-width:18px;accent-color:#2749F5;margin:0;flex:0 0 auto}
 
 .sf-tool .sf-new-card .sf-permission-option{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;font-weight:600;cursor:pointer}
+
+/* Shared image-tool base; all declarations are scoped to .sf-tool. */
+.sf-tool .sf-img-header{margin:0 0 14px}.sf-tool .sf-img-header h2{margin:0 0 6px}.sf-tool .sf-img-preview{max-width:100%;overflow:auto}
+
+
+/* PDF preview scrolling safeguard: scoped to tool preview containers.
+   Keep oversized page canvases inside independently scrollable preview boxes. */
+.sf-tool .sf-pdf-large-wrap,
+.sf-tool .sf-new-stage-wrap {
+  display: block;
+  max-width: 100% !important;
+  max-height: 75vh !important;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sf-tool .sf-preview-grid,
+.sf-tool .sf-new-thumbs {
+  max-width: 100%;
+  max-height: 70vh !important;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 620px) {
+  .sf-tool .sf-pdf-large-wrap,
+  .sf-tool .sf-new-stage-wrap {
+    max-height: 62vh !important;
+  }
+
+  .sf-tool .sf-preview-grid,
+  .sf-tool .sf-new-thumbs {
+    max-height: 38vh !important;
+  }
+}
