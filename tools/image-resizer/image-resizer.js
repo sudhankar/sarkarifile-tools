@@ -1,1 +1,0 @@
-(function(){var f=function(r){if(window.SarkariFileTools&&window.SarkariFileTools.initImageResize)window.SarkariFileTools.initImageResize(r)};window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageResize=window.SarkariFileTools.initImageResize||f;})();
