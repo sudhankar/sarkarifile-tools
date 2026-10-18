@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageBorder=function(root){window.SarkariFileTools.imageTools.init(root,"image-border")};})();

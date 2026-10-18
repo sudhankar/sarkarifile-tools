@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageRoundedCorners=function(root){window.SarkariFileTools.imageTools.init(root,"image-rounded-corners")};})();

@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageWatermark=function(root){window.SarkariFileTools.imageTools.init(root,"image-watermark")};})();
