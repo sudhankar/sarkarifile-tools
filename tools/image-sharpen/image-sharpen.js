@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageSharpen=function(root){window.SarkariFileTools.imageTools.init(root,"image-sharpen")};})();
