@@ -54,9 +54,12 @@
 .sf-tool .sf-img-header{margin:0 0 14px}.sf-tool .sf-img-header h2{margin:0 0 6px}.sf-tool .sf-img-preview{max-width:100%;overflow:auto}
 
 
-/* PDF editor preview scrolling fix.
-   PDF editor roots use .sf-pdf-* classes, not .sf-tool; keep these selectors explicit
-   so image-tool CSS remains isolated and cannot alter PDF editor behavior. */
+
+
+/* Mobile/desktop PDF editor scrolling compatibility.
+   Keep native panning enabled on the preview surface; reserve touch-action:none
+   for the actual draggable annotation handles/objects only. Do not contain
+   overscroll, so a gesture at the edge can continue scrolling the Blogger page. */
 .sf-pdf-sign .sf-pdf-large-wrap,
 .sf-pdf-add-text .sf-pdf-large-wrap,
 .sf-pdf-highlighter .sf-pdf-large-wrap,
@@ -64,15 +67,28 @@
 .sf-pdf-ocr .sf-new-stage-wrap,
 .sf-pdf-to-word .sf-new-stage-wrap {
   display: block !important;
+  width: 100% !important;
   max-width: 100% !important;
   max-height: 75vh !important;
   min-width: 0 !important;
-  min-height: 0 !important;
+  min-height: 120px !important;
   overflow: auto !important;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x pan-y;
+  overscroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x pan-y !important;
 }
+.sf-pdf-sign .sf-pdf-large-stage,
+.sf-pdf-add-text .sf-pdf-large-stage,
+.sf-pdf-highlighter .sf-pdf-large-stage,
+.sf-pdf-annotation .sf-new-stage,
+.sf-pdf-ocr .sf-new-stage,
+.sf-pdf-to-word .sf-new-stage {
+  width: max-content !important;
+  max-width: none !important;
+  margin: 0 !important;
+  touch-action: pan-x pan-y !important;
+}
+.sf-pdf-annotation .ann-layer { touch-action: pan-x pan-y !important; }
 .sf-pdf-sign .sf-preview-grid,
 .sf-pdf-add-text .sf-preview-grid,
 .sf-pdf-highlighter .sf-preview-grid,
@@ -84,8 +100,9 @@
   min-width: 0 !important;
   min-height: 0 !important;
   overflow: auto !important;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x pan-y !important;
 }
 @media (max-width: 620px) {
   .sf-pdf-sign .sf-pdf-large-wrap,
@@ -93,7 +110,7 @@
   .sf-pdf-highlighter .sf-pdf-large-wrap,
   .sf-pdf-annotation .sf-new-stage-wrap,
   .sf-pdf-ocr .sf-new-stage-wrap,
-  .sf-pdf-to-word .sf-new-stage-wrap { max-height: 62vh !important; }
+  .sf-pdf-to-word .sf-new-stage-wrap { max-height: 62vh !important; min-height: 180px !important; padding: 6px !important; }
   .sf-pdf-sign .sf-preview-grid,
   .sf-pdf-add-text .sf-preview-grid,
   .sf-pdf-highlighter .sf-preview-grid,
