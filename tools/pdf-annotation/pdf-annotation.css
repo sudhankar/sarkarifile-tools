@@ -21,4 +21,4 @@
 .sf-tool .sf-new-card .sf-new-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 @media(max-width:620px){.sf-tool .sf-new-card .sf-new-layout{grid-template-columns:minmax(0,1fr)}.sf-tool .sf-new-card .sf-new-thumbs{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));max-height:150px}.sf-tool .sf-new-card .sf-new-stage-wrap{max-height:62vh;padding:6px}}
 
-.sf-pdf-annotation .ann-layer{position:absolute;inset:0;overflow:visible;touch-action:none}.sf-pdf-annotation .ann-item{cursor:move;pointer-events:all}.sf-pdf-annotation .ann-item.is-selected{filter:drop-shadow(0 0 2px #2749F5)}.sf-pdf-annotation .sf-new-stage{touch-action:none}
+.sf-pdf-annotation .ann-layer{position:absolute;inset:0;overflow:visible;touch-action:pan-x pan-y}.sf-pdf-annotation .ann-item{cursor:move;pointer-events:all}.sf-pdf-annotation .ann-item.is-selected{filter:drop-shadow(0 0 2px #2749F5)}.sf-pdf-annotation .sf-new-stage{touch-action:pan-x pan-y}
