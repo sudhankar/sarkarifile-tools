@@ -179,3 +179,14 @@
  .sf-pdf-sign .sf-pdf-canvas-controls,.sf-pdf-add-text .sf-pdf-canvas-controls,.sf-pdf-highlighter .sf-pdf-canvas-controls,.sf-pdf-annotation .sf-pdf-canvas-controls,.sf-pdf-ocr .sf-pdf-canvas-controls,.sf-pdf-to-word .sf-pdf-canvas-controls {justify-content:flex-start!important;gap:6px!important;padding:7px!important}
  .sf-pdf-sign .sf-pdf-canvas-controls button,.sf-pdf-add-text .sf-pdf-canvas-controls button,.sf-pdf-highlighter .sf-pdf-canvas-controls button,.sf-pdf-annotation .sf-pdf-canvas-controls button,.sf-pdf-ocr .sf-pdf-canvas-controls button,.sf-pdf-to-word .sf-pdf-canvas-controls button {font-size:13px!important;padding:8px 10px!important}
 }
+
+
+/* v5: mobile canvas interaction and compact, predictable preview controls */
+.sf-pdf-canvas-controls{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;row-gap:8px!important;width:100%!important;box-sizing:border-box!important}
+.sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%;margin-top:4px;font-weight:700}
+.sf-pdf-canvas-controls [data-pdf-zoom-out],.sf-pdf-canvas-controls [data-pdf-zoom-reset],.sf-pdf-canvas-controls [data-pdf-zoom-in]{min-width:46px!important;flex:0 0 auto!important}
+.sf-pdf-canvas-controls button{white-space:nowrap!important;max-width:100%!important}
+.sf-pdf-annotation [data-ann-stage],.sf-pdf-annotation .sf-new-stage,.sf-pdf-highlighter [data-sfhl-stage],.sf-pdf-highlighter .sf-pdf-large-stage{touch-action:none!important;overscroll-behavior:contain; -webkit-user-select:none;user-select:none}
+.sf-pdf-annotation canvas,.sf-pdf-highlighter canvas{touch-action:none!important;max-width:100%;}
+.sf-pdf-annotation [data-ann-stage],.sf-pdf-highlighter [data-sfhl-stage]{position:relative;overflow:auto;max-width:100%;}
+@media(max-width:640px){.sf-pdf-canvas-controls{gap:6px!important;padding:8px!important}.sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%!important;display:block!important}.sf-pdf-canvas-controls [data-pdf-zoom-out],.sf-pdf-canvas-controls [data-pdf-zoom-reset],.sf-pdf-canvas-controls [data-pdf-zoom-in]{flex:1 1 0!important;min-width:0!important}.sf-pdf-canvas-controls [data-pdf-zoom-out],.sf-pdf-canvas-controls [data-pdf-zoom-reset],.sf-pdf-canvas-controls [data-pdf-zoom-in]{width:auto!important}.sf-pdf-annotation .sf-new-stage-wrap,.sf-pdf-highlighter .sf-pdf-large-wrap{width:100%!important;min-width:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch}}
