@@ -6,3 +6,22 @@
 
 /* SarkariFile responsive zoom controls: keep zoom actions together on narrow screens. */
 @media (max-width: 640px){.sf-tool [data-sf-canvas-controls],.sf-tool .sf-pdf-canvas-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.sf-tool [data-sf-canvas-controls] .sf-pdf-zoom-label,.sf-tool .sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%;margin-top:4px}.sf-tool [data-pdf-zoom-out],.sf-tool [data-pdf-zoom-reset],.sf-tool [data-pdf-zoom-in]{flex:0 0 auto;min-width:58px}.sf-tool [data-pdf-zoom-out]{margin-left:0}}
+
+/* V10: on phones, keep zoom − / Fit / + together on a dedicated row below page controls. */
+@media (max-width: 640px) {
+  .sf-pdf-highlighter [data-sf-canvas-controls],
+  .sf-pdf-highlighter .sf-pdf-canvas-controls {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  }
+  .sf-pdf-highlighter [data-sf-canvas-controls]::after,
+  .sf-pdf-highlighter .sf-pdf-canvas-controls::after {
+    content: ""; order: 80; flex: 0 0 100%; height: 0; margin: 0; padding: 0;
+  }
+  .sf-pdf-highlighter [data-pdf-zoom-out], .sf-pdf-highlighter .sf-pdf-canvas-controls [data-pdf-zoom-out],
+  .sf-pdf-highlighter [data-pdf-zoom-reset], .sf-pdf-highlighter .sf-pdf-canvas-controls [data-pdf-zoom-reset],
+  .sf-pdf-highlighter [data-pdf-zoom-in], .sf-pdf-highlighter .sf-pdf-canvas-controls [data-pdf-zoom-in] {
+    order: 81; flex: 0 0 auto; min-width: 56px; margin-left: 0;
+  }
+  .sf-pdf-highlighter [data-pdf-zoom-reset], .sf-pdf-highlighter .sf-pdf-canvas-controls [data-pdf-zoom-reset] { order: 82; }
+  .sf-pdf-highlighter [data-pdf-zoom-in], .sf-pdf-highlighter .sf-pdf-canvas-controls [data-pdf-zoom-in] { order: 83; }
+}
