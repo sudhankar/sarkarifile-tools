@@ -21,3 +21,26 @@
   .sf-pdf-sign [data-pdf-zoom-reset], .sf-pdf-sign .sf-pdf-canvas-controls [data-pdf-zoom-reset] { order: 82; }
   .sf-pdf-sign [data-pdf-zoom-in], .sf-pdf-sign .sf-pdf-canvas-controls [data-pdf-zoom-in] { order: 83; }
 }
+
+
+/* V11: move the Zoom label down with the − / Fit / + buttons on mobile. */
+@media (max-width: 640px) {
+  .sf-pdf-sign [data-sf-canvas-controls] .sf-pdf-zoom-label,
+  .sf-pdf-sign .sf-pdf-canvas-controls .sf-pdf-zoom-label {
+    order: 81 !important;
+    flex: 0 0 auto !important;
+    margin: 0 2px 0 0 !important;
+  }
+  .sf-pdf-sign [data-pdf-zoom-out],
+  .sf-pdf-sign .sf-pdf-canvas-controls [data-pdf-zoom-out] {
+    order: 82 !important;
+  }
+  .sf-pdf-sign [data-pdf-zoom-reset],
+  .sf-pdf-sign .sf-pdf-canvas-controls [data-pdf-zoom-reset] {
+    order: 83 !important;
+  }
+  .sf-pdf-sign [data-pdf-zoom-in],
+  .sf-pdf-sign .sf-pdf-canvas-controls [data-pdf-zoom-in] {
+    order: 84 !important;
+  }
+}
