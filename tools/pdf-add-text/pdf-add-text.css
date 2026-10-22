@@ -7,3 +7,6 @@
 .sf-pdf-add-text .sfmini-btn.is-armed{background:linear-gradient(135deg,#15803d,#166534);box-shadow:0 0 0 3px #86efac55}.sf-pdf-add-text .sf-pdf-large-stage.is-placement-mode{cursor:crosshair}
 
 .sf-pdf-add-text .sfat-live-text{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;line-height:1.25;max-width:calc(100% - 2px)}.sf-pdf-add-text .sf-pdf-large-stage.is-placement-mode{cursor:crosshair}.sf-pdf-add-text [data-sfat-add].is-armed{background:linear-gradient(135deg,#16a34a,#15803d);box-shadow:0 0 0 3px #bbf7d0}
+
+/* SarkariFile responsive zoom controls: keep zoom actions together on narrow screens. */
+@media (max-width: 640px){.sf-tool [data-sf-canvas-controls],.sf-tool .sf-pdf-canvas-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.sf-tool [data-sf-canvas-controls] .sf-pdf-zoom-label,.sf-tool .sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%;margin-top:4px}.sf-tool [data-pdf-zoom-out],.sf-tool [data-pdf-zoom-reset],.sf-tool [data-pdf-zoom-in]{flex:0 0 auto;min-width:58px}.sf-tool [data-pdf-zoom-out]{margin-left:0}}

@@ -22,3 +22,6 @@
 @media(max-width:620px){.sf-tool .sf-new-card .sf-new-layout{grid-template-columns:minmax(0,1fr)}.sf-tool .sf-new-card .sf-new-thumbs{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));max-height:150px}.sf-tool .sf-new-card .sf-new-stage-wrap{max-height:62vh;padding:6px}}
 
 .sf-pdf-to-word [data-word-text]{width:100%;min-height:160px;margin-top:10px}
+
+/* SarkariFile responsive zoom controls: keep zoom actions together on narrow screens. */
+@media (max-width: 640px){.sf-tool [data-sf-canvas-controls],.sf-tool .sf-pdf-canvas-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.sf-tool [data-sf-canvas-controls] .sf-pdf-zoom-label,.sf-tool .sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%;margin-top:4px}.sf-tool [data-pdf-zoom-out],.sf-tool [data-pdf-zoom-reset],.sf-tool [data-pdf-zoom-in]{flex:0 0 auto;min-width:58px}.sf-tool [data-pdf-zoom-out]{margin-left:0}}
