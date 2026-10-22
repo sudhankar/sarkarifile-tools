@@ -25,3 +25,9 @@
 
 /* SarkariFile responsive zoom controls: keep zoom actions together on narrow screens. */
 @media (max-width: 640px){.sf-tool [data-sf-canvas-controls],.sf-tool .sf-pdf-canvas-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.sf-tool [data-sf-canvas-controls] .sf-pdf-zoom-label,.sf-tool .sf-pdf-canvas-controls .sf-pdf-zoom-label{flex-basis:100%;margin-top:4px}.sf-tool [data-pdf-zoom-out],.sf-tool [data-pdf-zoom-reset],.sf-tool [data-pdf-zoom-in]{flex:0 0 auto;min-width:58px}.sf-tool [data-pdf-zoom-out]{margin-left:0}}
+
+
+/* V10: reliable pointer targeting for selected annotation strokes and arrow shafts. */
+.sf-pdf-annotation .ann-layer{pointer-events:none;touch-action:none}
+.sf-pdf-annotation .ann-layer .ann-item{pointer-events:stroke;touch-action:none;cursor:move}
+.sf-pdf-annotation .ann-layer .ann-item.is-selected{stroke-linecap:round;stroke-linejoin:round}
