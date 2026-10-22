@@ -30,23 +30,41 @@
 @media(max-width:640px){.sf-pdf-ocr [data-sf-canvas-controls],.sf-pdf-to-word [data-sf-canvas-controls]{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.sf-pdf-ocr [data-sf-canvas-controls] .sf-pdf-zoom-label,.sf-pdf-to-word [data-sf-canvas-controls] .sf-pdf-zoom-label{order:20;flex:0 0 100%;margin:8px 0 0}.sf-pdf-ocr [data-pdf-zoom-out],.sf-pdf-to-word [data-pdf-zoom-out]{order:21;margin-left:0}.sf-pdf-ocr [data-pdf-zoom-reset],.sf-pdf-to-word [data-pdf-zoom-reset]{order:22}.sf-pdf-ocr [data-pdf-zoom-in],.sf-pdf-to-word [data-pdf-zoom-in]{order:23}.sf-pdf-ocr [data-pdf-zoom-out],.sf-pdf-ocr [data-pdf-zoom-reset],.sf-pdf-ocr [data-pdf-zoom-in],.sf-pdf-to-word [data-pdf-zoom-out],.sf-pdf-to-word [data-pdf-zoom-reset],.sf-pdf-to-word [data-pdf-zoom-in]{flex:0 0 auto;min-width:64px}}
 
 
-/* V8: desktop OCR/Word zoom controls must not wrap the + button onto a third line.
-   Keep page navigation first, then place zoom actions together on their own row. */
-@media (min-width: 641px){
-  .sf-pdf-ocr [data-sf-canvas-controls],
-  .sf-pdf-to-word [data-sf-canvas-controls]{
-    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
-  }
-  .sf-pdf-ocr [data-sf-canvas-controls] .sf-pdf-zoom-label,
-  .sf-pdf-to-word [data-sf-canvas-controls] .sf-pdf-zoom-label{
-    order:90; flex:0 0 100%; margin:8px 0 0;
-  }
-  .sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-out],
-  .sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-out]{
-    order:91; margin-left:0;
-  }
-  .sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-reset],
-  .sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-reset]{order:92}
-  .sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-in],
-  .sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-in]{order:93}
+
+
+/* V9: put the zoom controls on a distinct row below page navigation on OCR and Word tools. */
+.sf-pdf-ocr [data-sf-canvas-controls],
+.sf-pdf-to-word [data-sf-canvas-controls] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.sf-pdf-ocr [data-sf-canvas-controls]::before,
+.sf-pdf-to-word [data-sf-canvas-controls]::before {
+  content: "";
+  order: 89;
+  flex: 0 0 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+.sf-pdf-ocr [data-sf-canvas-controls] .sf-pdf-zoom-label,
+.sf-pdf-to-word [data-sf-canvas-controls] .sf-pdf-zoom-label {
+  order: 90;
+  flex: 0 0 auto;
+  margin: 0 2px 0 0;
+}
+.sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-out],
+.sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-out] {
+  order: 91;
+  margin-left: 0;
+}
+.sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-reset],
+.sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-reset] {
+  order: 92;
+}
+.sf-pdf-ocr [data-sf-canvas-controls] [data-pdf-zoom-in],
+.sf-pdf-to-word [data-sf-canvas-controls] [data-pdf-zoom-in] {
+  order: 93;
 }
