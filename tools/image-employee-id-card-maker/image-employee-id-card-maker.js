@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageEmployeeIdCardMaker=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-employee-id-card-maker")};})();

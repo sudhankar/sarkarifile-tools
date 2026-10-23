@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageAssignmentCoverMaker=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-assignment-cover-maker")};})();

@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageDimensionsChecker=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-dimensions-checker")};})();

@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImagePassportMaker=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-passport-maker")};})();

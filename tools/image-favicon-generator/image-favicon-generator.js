@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageFaviconGenerator=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-favicon-generator")};})();

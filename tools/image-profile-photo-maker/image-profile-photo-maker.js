@@ -1,0 +1,1 @@
+(function(){"use strict";window.SarkariFileTools=window.SarkariFileTools||{};window.SarkariFileTools.initImageProfilePhotoMaker=function(root){window.SarkariFileTools.advancedImageTools.init(root,"image-profile-photo-maker")};})();
