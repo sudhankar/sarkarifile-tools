@@ -5,7 +5,7 @@ function pct(v){return Number.isFinite(v)?v.toFixed(2)+'%':'—'}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function kpi(label,value){return '<div class="sf-fin-kpi"><span>'+esc(label)+'</span><strong>'+esc(value)+'</strong></div>'}
 function table(headers,rows){return '<div class="sf-fin-table-wrap"><table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'}
-function emi(p,annual,n){if(p<=0||n<=0)return 0;var r=annual/1200;return r===0?p/n:p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
+function emi(p,annual,n){if(!Number.isFinite(p)||!Number.isFinite(annual)||!Number.isFinite(n)||p<=0||n<=0)return 0;var r=annual/1200;if(r===0)return p/n;if(r<=-1)return NaN;var den=-Math.expm1(-n*Math.log1p(r));return den===0?NaN:p*r/den}
 function growMonthly(balance,annual,contrib,months){var r=Math.pow(1+annual/100,1/12)-1;for(var i=0;i<months;i++)balance=balance*(1+r)+contrib;return balance}
 function amort(p,annual,pay,nmax){var r=annual/1200,rows=[],interest=0,paid=0,month=0;while(p>0.005&&month<nmax&&month<1200){month++;var intr=p*r,principal=Math.min(p,Math.max(0,pay-intr));if(principal<=0)break;p-=principal;interest+=intr;paid+=principal+intr;if(month<=12||month%12===0||p<=0.005)rows.push([month,fmt(principal+intr),fmt(principal),fmt(intr),fmt(Math.max(0,p))])}return {months:month,interest:interest,paid:paid,balance:Math.max(0,p),rows:rows}}
 function report(r,html,rows){var out=r.querySelector('[data-fin-output]');out.innerHTML=html;r._sfCsvRows=rows||[]}
