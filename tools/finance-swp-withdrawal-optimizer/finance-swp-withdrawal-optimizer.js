@@ -15,7 +15,51 @@ if(KIND==='debt'){
  function simulate(mode){var ds=debts.map(d=>({...d,b:d.b})),months=0,interest=0,paid=0,order=[];while(ds.some(d=>d.b>0.01)&&months<1200){months++;var before=ds.reduce((s,d)=>s+d.b,0);ds.forEach(d=>{if(d.b>0){var intr=d.b*d.apr/1200;d.b+=intr;interest+=intr}});var budget=ds.reduce((s,d)=>s+Math.min(d.min,d.b),0)+extra;ds.forEach(d=>{var p=Math.min(d.b,d.min);d.b-=p;paid+=p;budget-=p});var sorted=ds.filter(d=>d.b>0).sort((a,b)=>mode==='snow'?a.b-b.b:b.apr-a.apr);for(var d of sorted){if(budget<=0)break;var p=Math.min(d.b,budget);d.b-=p;budget-=p;paid+=p;if(d.b<=0.01&&!order.includes(d.name))order.push(d.name)}if(before<=0.01)break;if(ds.every(d=>d.apr===0)&&extra===0&&ds.some(d=>d.b>0)&&months>300)break;}return {months,interest,paid,order,remaining:ds.reduce((s,d)=>s+d.b,0)}}
  var av=simulate('av'),sn=simulate('snow');ks=[['Avalanche रणनीति अवधि',av.months>=1200?'1200+ माह':av.months+' माह'],['Avalanche कुल ब्याज',money(av.interest)],['Snowball कुल ब्याज',money(sn.interest)],['अनुमानित बचा बकाया',money(av.remaining)]];heads=['रणनीति','ऋण-मुक्त अवधि','कुल ब्याज','कुल भुगतान'];rows=[['Avalanche (सबसे अधिक ब्याज पहले)',av.months+' माह',money(av.interest),money(av.paid)],['Snowball (सबसे छोटा बकाया पहले)',sn.months+' माह',money(sn.interest),money(sn.paid)]];note+=' ब्याज मासिक दर से अनुमानित है और अतिरिक्त भुगतान हर माह उपलब्ध माना गया है। न्यूनतम भुगतान बदलने पर परिणाम बदलेंगे।';
 }else if(KIND==='swp'){
- var bal=Math.max(0,val(r,'corpus')),w=Math.max(0,val(r,'withdraw')),rate=clamp(val(r,'rate'),-99,100),inf=clamp(val(r,'inflation'),-50,100),years=Math.round(clamp(val(r,'years'),1,80)),total=0,rows0=[];for(var y=1;y<=years;y++){var start=bal,ret=bal*(Math.pow(1+rate/100,1)-1),out=w*12*Math.pow(1+inf/100,y-1);bal=Math.max(0,bal+ret-out);total+=Math.min(start+ret,out);rows0.push([y,money(start),money(ret),money(out),money(bal)]);if(bal<=0){rows0[rows0.length-1][4]=money(0);break}}ks=[['अंतिम अनुमानित कोष',money(bal)],['निकासी से उपयोग',money(total)],['कोष कब समाप्त',bal>0?'अवधि के अंत तक शेष':'अवधि के भीतर समाप्त'],['पहले वर्ष की वार्षिक निकासी',money(w*12)]];heads=['वर्ष','शुरुआती कोष','अनुमानित रिटर्न','वार्षिक निकासी','अंतिम कोष'];rows=rows0;note+=' मॉडल सालाना रिटर्न और साल के अंत में निकासी मानता है; वास्तविक बाजार रिटर्न क्रम और महंगाई परिणाम को बदल सकते हैं।';
+ var corpus=Math.max(0,val(r,'corpus')),
+     monthlyWithdrawal=Math.max(0,val(r,'withdraw')),
+     annualReturn=clamp(val(r,'rate'),-99,100),
+     stepUp=clamp(val(r,'inflation'),-50,100),
+     years=Math.round(clamp(val(r,'years'),1,80)),
+     months=years*12,
+     monthlyRate=Math.pow(1+annualReturn/100,1/12)-1,
+     balance=corpus,totalWithdrawn=0,totalGrowth=0,rows0=[],depletedAt=null,
+     firstYearWithdrawal=0,lastYearWithdrawal=0;
+ // Match the common SWP convention used by Finnovate: withdrawal at the
+ // beginning of each month, followed by monthly compounding of the remainder.
+ for(var y=1;y<=years;y++){
+   var opening=balance,yearGrowth=0,yearWithdrawn=0;
+   for(var mo=0;mo<12;mo++){
+     var monthIndex=(y-1)*12+mo,
+         planned=monthlyWithdrawal*Math.pow(1+stepUp/100,Math.floor(monthIndex/12)),
+         actual=Math.min(balance,planned);
+     balance=Math.max(0,balance-actual);
+     yearWithdrawn+=actual;totalWithdrawn+=actual;
+     if(balance>0){var growth=balance*monthlyRate;balance+=growth;yearGrowth+=growth;totalGrowth+=growth;}
+     if(actual+1e-8<planned&&depletedAt===null)depletedAt={year:y,month:mo+1};
+     if(balance<=0){balance=0;if(depletedAt===null)depletedAt={year:y,month:mo+1};break;}
+   }
+   if(y===1)firstYearWithdrawal=yearWithdrawn;
+   lastYearWithdrawal=yearWithdrawn;
+   rows0.push([y,money(opening),money(yearGrowth),money(yearWithdrawn),money(balance)]);
+   if(balance<=0)break;
+ }
+ var totalProfit=balance+totalWithdrawn-corpus,
+     withdrawalRate=corpus>0?(monthlyWithdrawal*12/corpus*100):0,
+     realEnding=balance/Math.pow(Math.max(0.000001,1+stepUp/100),years),
+     depletionLabel=depletedAt?('वर्ष '+depletedAt.year+', माह '+depletedAt.month):'चुनी अवधि में कोष शेष';
+ ks=[
+   ['अंतिम अनुमानित कोष',money(balance)],
+   ['कुल अनुमानित निकासी',money(totalWithdrawn)],
+   ['कुल अनुमानित लाभ',money(totalProfit)],
+   ['पहले वर्ष की निकासी',money(firstYearWithdrawal)],
+   ['अंतिम वर्ष की निकासी',money(lastYearWithdrawal)],
+   ['शुरुआती निकासी दर',fmt(withdrawalRate,2)+'%'],
+   ['महंगाई-समायोजित अंतिम कोष',money(realEnding)],
+   ['कोष की स्थिति',depletionLabel]
+ ];
+ heads=['वर्ष','शुरुआती कोष','अनुमानित रिटर्न','वास्तविक निकासी','अंतिम कोष'];
+ rows=rows0;
+ note+=' गणना महीने-दर-महीने होती है: प्रत्येक महीने की शुरुआत में निकासी, फिर शेष कोष पर मासिक चक्रवृद्धि रिटर्न। वार्षिक रिटर्न को प्रभावी मासिक दर (1 + वार्षिक दर)^(1/12) − 1 में बदला गया है। निकासी में वृद्धि हर नए वर्ष की शुरुआत में लागू होती है। वास्तविक बाजार रिटर्न, टैक्स, फीस और निकासी की तारीख के कारण वास्तविक परिणाम अलग हो सकते हैं। महंगाई-समायोजित अंतिम कोष चुनी गई निकासी-वृद्धि दर को महंगाई का अनुमान मानकर निकाला गया है।';
 }else if(KIND==='emergency'){
  var need=Math.max(0,val(r,'essential'))+Math.max(0,val(r,'debt')),months=clamp(Math.round(val(r,'months')),1,60),target=need*months,current=Math.max(0,val(r,'current')),save=Math.max(0,val(r,'save')),income=Math.max(0,val(r,'income')),gap=Math.max(0,target-current),timeline=save>0?Math.ceil(gap/save):Infinity;ks=[['आपातकालीन फंड लक्ष्य',money(target)],['मौजूदा फंड कवरेज',need>0?fmt(current/need,1)+' महीने':'—'],['लक्ष्य की कमी',money(gap)],['मासिक बचत से समय',Number.isFinite(timeline)?timeline+' महीने':'बचत राशि दर्ज करें'],['आय के मुकाबले आवश्यक खर्च',income>0?fmt(need/income*100,1)+'%':'—']];heads=['माप','राशि/मान'];rows=[['ज़रूरी मासिक भुगतान',money(need)],['लक्ष्य सुरक्षा अवधि',months+' महीने'],['लक्ष्य राशि',money(target)],['मौजूदा तरल बचत',money(current)],['मासिक बचत क्षमता',money(save)],['लक्ष्य तक शेष',money(gap)],['आय से शेष (आय - आवश्यक भुगतान)',money(income-need)]];
 }else if(KIND==='education'){
