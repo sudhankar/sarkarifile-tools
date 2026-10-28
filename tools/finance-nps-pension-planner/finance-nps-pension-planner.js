@@ -24,12 +24,12 @@ case 'nps':
   rate = clamp(npsValues[2], -99, 100);
   var lump = clamp(npsValues[3], 0, 100);
   var ann = clamp(npsValues[4], 0, 100);
-  var r = (rate / 100) / 12;
+  var monthlyRate = (rate / 100) / 12;
   var totalInvested = cont * n;
   // NPS contributions are assumed to be invested at the beginning of each month (Annuity Due).
-  var corpus = r === 0
+  var corpus = monthlyRate === 0
     ? cont * n
-    : cont * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    : cont * ((Math.pow(1 + monthlyRate, n) - 1) / monthlyRate) * (1 + monthlyRate);
   var lumpAmount = corpus * (lump / 100);
   var annuityCorpus = corpus - lumpAmount;
   var pension = (annuityCorpus * (ann / 100)) / 12;
@@ -38,9 +38,9 @@ case 'nps':
   };
   rows = [];
   for (var month = 12; month <= n; month += 12) {
-    var yearCorpus = r === 0
+    var yearCorpus = monthlyRate === 0
       ? cont * month
-      : cont * ((Math.pow(1 + r, month) - 1) / r) * (1 + r);
+      : cont * ((Math.pow(1 + monthlyRate, month) - 1) / monthlyRate) * (1 + monthlyRate);
     rows.push([month / 12, npsMoney(cont * month), npsMoney(yearCorpus), npsMoney(yearCorpus - cont * month)]);
   }
   if (n > 0 && n % 12 !== 0) {
