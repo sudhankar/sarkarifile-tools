@@ -7,7 +7,7 @@ function fmt(n,d){return Number.isFinite(n)?n.toFixed(d===undefined?2:d):'—'}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function kpi(l,v){return '<div class="sf-fin-kpi"><span>'+esc(l)+'</span><strong>'+esc(v)+'</strong></div>'}
 function table(h,rows){return '<div class="sf-fin-table-wrap"><table><thead><tr>'+h.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'}
-function emi(p,annual,months){if(!Number.isFinite(p)||!Number.isFinite(annual)||!Number.isFinite(months)||p<=0||months<=0)return 0;var r=annual/1200;if(r===0)return p/months;if(r<=-1)return NaN;var den=-Math.expm1(-months*Math.log1p(r));return den===0?NaN:p*r/den}
+function emi(p,annual,months){if(p<=0||months<=0)return 0;var r=annual/1200;return r===0?p/months:p*r*Math.pow(1+r,months)/(Math.pow(1+r,months)-1)}
 function render(r,ks,heads,rows,note){var all=[['रिपोर्ट',TITLE],['बनाने का समय',new Date().toLocaleString('hi-IN')],[],['मुख्य परिणाम','मान'],...ks.map(x=>[x[0],x[1]]),[],heads,...rows,['नोट',note]];var html='<div class="sf-fin-kpis">'+ks.map(x=>kpi(x[0],x[1])).join('')+'</div><h3>विस्तृत रिपोर्ट</h3>'+table(heads,rows)+'<p class="sf-fin-note">'+esc(note)+'</p>';r.querySelector('[data-fin-output]').innerHTML=html}
 function calc(r){var ks=[],heads=[],rows=[],note='यह अनुमान-आधारित शैक्षिक टूल है। परिणाम इनपुट और मान्यताओं पर निर्भर हैं; यह वित्तीय सलाह या स्वीकृति की गारंटी नहीं है।';
 if(KIND==='debt'){
