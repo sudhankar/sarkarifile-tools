@@ -10,7 +10,52 @@ case 'rd': var dep=Math.max(0,v('monthly'));rate=clamp(v('rate'),-99,100);years=
 case 'ppf': var annual=Math.max(0,v('annual'));rate=clamp(v('rate'),-99,100);years=clamp(Math.round(v('years')),1,60);bal=0;invested=0;rows=[];for(var y=1;y<=years;y++){bal=(bal+annual)*(1+rate/100);invested+=annual;rows.push([y,money(annual),money(invested),money(bal),money(bal-invested)])}k=[['अनुमानित अंतिम राशि',money(bal)],['कुल योगदान',money(invested)],['अनुमानित ब्याज',money(bal-invested)],['प्रयुक्त दर',fmt(rate)+'%']];h=['वर्ष','वार्षिक जमा','संचित योगदान','अनुमानित राशि','ब्याज'];note+=' यह गणितीय अनुमान है, आधिकारिक PPF नियमों, जमा की तारीख/सीमा या कर लाभ का सत्यापन नहीं।';break;
 case 'nsc': amount=Math.max(0,v('amount'));rate=clamp(v('rate'),-99,100);years=clamp(v('years'),0,60);fv=amount*Math.pow(1+rate/100,years);k=[['परिपक्वता राशि',money(fv)],['अनुमानित कुल ब्याज',money(fv-amount)],['मूल निवेश',money(amount)],['CAGR मान्यता',fmt(rate)+'%']];h=['वर्ष','निवेश','अनुमानित राशि','संचित ब्याज'];rows=[];for(var y=1;y<=years;y++)rows.push([y,money(amount),money(amount*Math.pow(1+rate/100,y)),money(amount*(Math.pow(1+rate/100,y)-1))]);note+=' NSC की वास्तविक दर और नियम खरीद की तारीख के अनुसार आधिकारिक स्रोत से सत्यापित करें।';break;
 case 'home-loan': amount=Math.max(0,v('amount'));rate=clamp(v('rate'),0,1000);years=clamp(v('years'),1,50);var ex=Math.max(0,v('extra')),months=years*12,rm=rate/1200,emi=rm===0?amount/months:amount*rm*Math.pow(1+rm,months)/(Math.pow(1+rm,months)-1),b=amount,int=0,paid=0;rows=[];for(var m=1;m<=months&&b>.01;m++){var ii=b*rm,pp=Math.min(b,Math.max(0,emi+ex-ii));if(pp<=0)break;b-=pp;int+=ii;paid+=ii+pp;if(m<=12||m%12===0||b<=.01)rows.push([m,money(emi+ex),money(ii),money(pp),money(Math.max(0,b))])}k=[['मासिक EMI',money(emi)],['अतिरिक्त भुगतान सहित मासिक राशि',money(emi+ex)],['अनुमानित कुल ब्याज',money(int)],['कुल भुगतान',money(amount+int)],['वास्तविक अनुमानित अवधि',Math.min(months,m)+' महीने']];h=['माह','कुल भुगतान','ब्याज','मूलधन','शेष बकाया'];note+=' दर स्थिर रहने और अतिरिक्त भुगतान EMI के साथ करने का अनुमान है।';break;
-case 'nps': var cont=Math.max(0,v('monthly'));years=clamp(Math.round(v('years')),0,60);rate=clamp(v('rate'),-99,100);var rmo=Math.pow(1+rate/100,1/12)-1;bal=0;invested=0;rows=[];for(var m=1;m<=years*12;m++){bal=(bal+cont)*(1+rmo);invested+=cont;if(m%12===0)rows.push([m/12,money(invested),money(bal),money(bal-invested)])}var lump=clamp(v('lump'),0,100),ann=Math.max(0,v('annuity')),lumpsum=bal*lump/100,annuityCorpus=bal-lumpsum,pension=annuityCorpus*ann/1200;k=[['अनुमानित कुल कोष',money(bal)],['एकमुश्त निकासी मान्यता',money(lumpsum)],['annuity के लिए शेष',money(annuityCorpus)],['अनुमानित मासिक पेंशन',money(pension)],['कुल योगदान',money(invested)]];h=['वर्ष','संचित योगदान','अनुमानित कोष','अनुमानित वृद्धि'];note+=' निकासी प्रतिशत और annuity दर उपयोगकर्ता की मान्यताएँ हैं; वास्तविक NPS निकासी/annuity नियम अलग हो सकते हैं।';break;
+case 'nps':
+  // Read the five NPS inputs strictly in their visible DOM order.
+  var npsInputs = r.querySelectorAll('.sf-fin-grid input');
+  var npsDefaults = [10000, 25, 9, 60, 6];
+  var npsValues = npsDefaults.map(function(def, index) {
+    var raw = npsInputs[index] ? parseFloat(npsInputs[index].value) : NaN;
+    return Number.isFinite(raw) ? raw : def;
+  });
+  var cont = Math.max(0, npsValues[0]);
+  years = clamp(npsValues[1], 0, 60);
+  var n = Math.max(0, Math.round(years * 12));
+  rate = clamp(npsValues[2], -99, 100);
+  var lump = clamp(npsValues[3], 0, 100);
+  var ann = clamp(npsValues[4], 0, 100);
+  var r = (rate / 100) / 12;
+  var totalInvested = cont * n;
+  // NPS contributions are assumed to be invested at the beginning of each month (Annuity Due).
+  var corpus = r === 0
+    ? cont * n
+    : cont * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+  var lumpAmount = corpus * (lump / 100);
+  var annuityCorpus = corpus - lumpAmount;
+  var pension = (annuityCorpus * (ann / 100)) / 12;
+  var npsMoney = function(value) {
+    return '\u20B9' + Math.round(value).toLocaleString('en-IN');
+  };
+  rows = [];
+  for (var month = 12; month <= n; month += 12) {
+    var yearCorpus = r === 0
+      ? cont * month
+      : cont * ((Math.pow(1 + r, month) - 1) / r) * (1 + r);
+    rows.push([month / 12, npsMoney(cont * month), npsMoney(yearCorpus), npsMoney(yearCorpus - cont * month)]);
+  }
+  if (n > 0 && n % 12 !== 0) {
+    rows.push([fmt(n / 12, 2), npsMoney(totalInvested), npsMoney(corpus), npsMoney(corpus - totalInvested)]);
+  }
+  k = [
+    ['अनुमानित कुल कोष', npsMoney(corpus)],
+    ['एकमुश्त निकासी मान्यता', npsMoney(lumpAmount)],
+    ['annuity के लिए शेष', npsMoney(annuityCorpus)],
+    ['अनुमानित मासिक पेंशन', npsMoney(pension)],
+    ['कुल योगदान', npsMoney(totalInvested)]
+  ];
+  h = ['वर्ष', 'संचित योगदान', 'अनुमानित कोष', 'अनुमानित वृद्धि'];
+  note += ' गणना में नाममात्र वार्षिक रिटर्न को 12 से विभाजित कर मासिक कंपाउंडिंग और प्रत्येक माह की शुरुआत में योगदान (Annuity Due) माना गया है। वास्तविक NPS निकासी/annuity नियम और रिटर्न अलग हो सकते हैं।';
+  break;
 case 'leave': var salary=Math.max(0,v('salary')),days=Math.max(0,v('days')),div=clamp(v('divisor'),1,365);fv=salary/div*days;k=[['अनुमानित सकल encashment',money(fv)],['मासिक Basic + DA',money(salary)],['पात्र अवकाश',fmt(days,0)+' दिन'],['गणना divisor',fmt(div,0)]];h=['माप','मान'];rows=[['मासिक Basic + DA',money(salary)],['पात्र अवकाश दिन',fmt(days,0)],['दैनिक वेतन मान्यता',money(salary/div)],['अनुमानित सकल राशि',money(fv)]];note+=' लागू सेवा नियम, leave ceiling और कर/कटौतियाँ शामिल नहीं हैं।';break;
 case 'gratuity': var sal=Math.max(0,v('salary')),yrs=Math.max(0,v('years')),days=clamp(v('days'),0,31),div=clamp(v('divisor'),1,365);fv=sal/div*days*yrs;k=[['अनुमानित gratuity',money(fv)],['मासिक Basic + DA',money(sal)],['सेवा अवधि',fmt(yrs,1)+' वर्ष'],['प्रति वर्ष वेतन-दिन',fmt(days,1)]];h=['माप','मान'];rows=[['मासिक Basic + DA',money(sal)],['सेवा वर्ष',fmt(yrs,1)],['प्रति वर्ष वेतन-दिन',fmt(days,1)],['वेतन divisor',fmt(div,0)],['अनुमानित सकल gratuity',money(fv)]];note+=' यह सरल अनुमान है; वैधानिक पात्रता, सेवा अवधि की rounding, लागू अधिनियम/नियम और कर शामिल नहीं हैं।';break;
 }
